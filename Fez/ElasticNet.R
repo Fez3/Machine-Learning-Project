@@ -4,7 +4,7 @@
 # Working with glmnet, importing file. Set variable "obs" to number of observations in the training data
 
 library(glmnet)
-data=read.csv("basement.csv")[,-1]
+data=read.csv("basementX.csv")[,-1]
 obs=1458
 data=data[1:obs,]
 
@@ -148,7 +148,7 @@ mean(abs(y.test-predict(lasso.models.train, s = bestlambda.lasso, newx = x[test,
 
 #rmse for elastic net model
 
-print(paste("rMSEl=",sqrt(mean((log(predict(lasso.models.train, s = bestlambda.lasso, newx = x[test,])) - log(y.test))^2))))
+print(paste("rMSEl=",sqrt(mean((predict(lasso.models.train, s = bestlambda.lasso, newx = x[test,]) - y.test)^2))))
 
 # Boosting elastic net by adding predicted SalesPrice values to x data, using epsilon (residuals) as y
 
@@ -213,16 +213,17 @@ mean(abs(y.test-predict(lasso.models.train, s = bestlambda.lasso, newx = x[test,
 
 # rmse of boosted model
 
-sqrt(mean((log(y.test)-log(predict(lasso.models.train, s = bestlambda.lasso, newx = x[test,])+predict(lasso.models.train1, s = bestlambda.lasso1, newx = x1[test,])))^2))
+sqrt(mean((y.test-predict(lasso.models.train, s = bestlambda.lasso, newx = x[test,])+predict(lasso.models.train1, s = bestlambda.lasso1, newx = x1[test,]))^2))
 
 # applying the boosted elastic net to testing data for submission
 
-data=read.csv("basement.csv")[,-1]
+data=read.csv("basementX.csv")[,-1]
 #data=data[1459:2917, ]
 
 x = model.matrix(SalePrice ~ ., data)[, -1] 
 y = data$SalePrice
-Prices=exp(predict(lasso.models.train, s = bestlambda.lasso, newx = x))
+y=log(y)
+Prices=predict(lasso.models.train, s = bestlambda.lasso, newx = x)
 data["SalePrice"]=predict(lasso.models.train, s = bestlambda.lasso, newx = x)
 data[,'epsilon']=integer(2917)
 
@@ -245,5 +246,5 @@ y1 = data1$epsilon
 
 
 Prices=Prices-exp(predict(lasso.models.train1, s = bestlambda.lasso1, newx = x))
-
+Prices=exp(Prices)
 write.csv(data.frame(Prices), "elasticnet.csv")

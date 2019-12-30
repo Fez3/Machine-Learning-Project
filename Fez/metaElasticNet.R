@@ -4,7 +4,7 @@
 # Working with glmnet, importing file. Set variable "obs" to number of observations in the training data
 
 library(glmnet)
-data=read.csv("basementM.csv")[,-1]
+data=read.csv("elasticnet.csv")[,-1]
 
 #m1=read.csv("elasticnet.csv")[,-1]
 #m2=read.csv("xingXG.csv")[,-1]
@@ -14,7 +14,7 @@ data=read.csv("basementM.csv")[,-1]
 #data['m3']=log(m3)
 data['m1']=log(data['m1'])
 data['m2']=log(data['m2'])
-data['m3']=log(data['m3'])
+#data['m3']=log(data['m3'])
 data['SalePrice']=log(data['SalePrice'])
 obs=1458
 data=data[1:obs,]
@@ -228,7 +228,7 @@ sqrt(mean((y.test-predict(lasso.models.train, s = bestlambda.lasso, newx = x[tes
 
 # applying the boosted elastic net to testing data for submission
 
-data=read.csv("basementM.csv")[,-1]
+data=read.csv("elasticnet.csv")[,-1]
 
 #m1=read.csv("elasticnet.csv")[,-1]
 #m2=read.csv("xingXG.csv")[,-1]
@@ -238,7 +238,7 @@ data=read.csv("basementM.csv")[,-1]
 #data['m3']=log(m3)
 data['m1']=log(data['m1'])
 data['m2']=log(data['m2'])
-data['m3']=log(data['m3'])
+#data['m3']=log(data['m3'])
 data['SalePrice']=log(data['SalePrice'])
 data=data[1459:2917, ]
 
